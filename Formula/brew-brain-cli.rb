@@ -11,7 +11,7 @@ class BrewBrainCli < Formula
   depends_on "jq"
 
   def install
-    bin.install "bin/brew_brain.sh" => "brew_brain"
+    bin.install "bin/brew_brain" => "brew_brain"
   end
 
   def caveats
