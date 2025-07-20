@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VERSION="1.0.0"
+# shellcheck disable=SC2034
+VERSION="1.0.2"
 
 RAYMON_TAP="raymonepping"
 EXPECTED=(
+  brew-brain-cli
   bump-version-cli
   commit-gh-cli
   folder-tree-cli
@@ -28,8 +30,14 @@ get_installed_brews() {
   readarray -t all < <(brew list --formula 2>/dev/null || true)
   [[ ${#all[@]} -eq 0 ]] && return
   info=$(brew info --json=v2 "${all[@]}" 2>/dev/null)
-  mapfile -t BREWS < <(echo "$info" | jq -r '.formulae[]? | select((.tap // "") | test("'"$RAYMON_TAP"'")) | .name // empty')
+  mapfile -t BREWS < <(echo "$info" | jq -r '
+  .formulae[]? | select(
+    .name | test("^(brew-brain-cli|bump-version-cli|commit-gh-cli|folder-tree-cli|radar-love-cli|repository-audit-cli|repository-backup-cli|self-doc-gen-cli)$")
+  ) | .name // empty
+')
+
 }
+
 
 get_installed_version() {
   brew info --json=v2 "$1" 2>/dev/null | jq -r '.formulae[0].versions.stable // empty'
@@ -38,6 +46,7 @@ get_installed_version() {
 get_latest_version() {
   local brew="$1" repo=""
   case "$brew" in
+  brew-brain-cli) desc="Brew Brain: CLI arsenal dashboard" ;;
   bump-version-cli) repo="homebrew-bump-version-cli" ;;
   commit-gh-cli) repo="homebrew-commit-gh-cli" ;;
   folder-tree-cli) repo="homebrew-folder-tree-cli" ;;
@@ -94,6 +103,7 @@ render_human() {
     symbol="✅"
     [[ "$local_version" != "$latest_version" && "$latest_version" != "–" ]] && symbol="⬆️"
     case "$brew" in
+    brew-brain-cli) desc="Brew Brain: CLI arsenal dashboard" ;;
     bump-version-cli) desc="Semantic versioning + changelogs" ;;
     commit-gh-cli) desc="GitHub commit automation" ;;
     folder-tree-cli) desc="Visual folder structure + docs" ;;
@@ -121,6 +131,7 @@ render_markdown() {
   echo "|-----|-------------|"
   for brew in "${BREWS[@]}"; do
     case "$brew" in
+    brew-brain-cli) desc="Brew Brain: CLI arsenal dashboard" ;;
     bump-version-cli) echo "| \`$brew\` | Semantic versioning + changelogs |" ;;
     commit-gh-cli) echo "| \`$brew\` | GitHub commit automation |" ;;
     folder-tree-cli) echo "| \`$brew\` | Visual folder structure + docs |" ;;
@@ -140,6 +151,7 @@ render_json() {
     [[ $first -eq 0 ]] && echo ","
     first=0
     case "$brew" in
+    brew-brain-cli) desc="Brew Brain: CLI arsenal dashboard" ;;
     bump-version-cli) desc="Semantic versioning + changelogs" ;;
     commit-gh-cli) desc="GitHub commit automation" ;;
     folder-tree-cli) desc="Visual folder structure + docs" ;;
