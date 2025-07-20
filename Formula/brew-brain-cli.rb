@@ -1,32 +1,33 @@
-class BumpVersionCli < Formula
+class BrewBrainCli < Formula
 
-  desc "CLI tool for bumping semantic versions in Bash scripts and updating changelogs"
-  homepage "https://github.com/raymonepping/bump_version_cli"
-  url "https://github.com/raymonepping/homebrew-bump-version-cli/archive/refs/tags/v0.6.1.tar.gz"
-  sha256 "56d6be269476685a0e72ad87e116d8a3a651f44a5ce2ce15a1d0d14082f88a7c"
+  desc "Audit, document, and manage your Homebrew CLI arsenal with one meta-tool"
+  homepage "https://github.com/raymonepping/brew_brain_cli"
+  url "https://github.com/raymonepping/homebrew-brew-brain-cli/archive/refs/tags/v1.0.0.tar.gz"
+  sha256 "PUT_SHA256_HERE"
   license "MIT"
   version "1.0.0"
 
   depends_on "bash"
+  depends_on "jq"
 
   def install
-    bin.install "bin/bump_version" => "bump_version"
+    bin.install "bin/brew_brain.sh" => "brew_brain"
   end
 
   def caveats
     <<~EOS
       To get started, run:
-        bump_version --help
+        brew_brain --help
 
-      This CLI helps manage Git commits, tags, and semantic versioning.
-      It uses a .version file for tracking current state.
+      This CLI helps audit, document, and version-manage your custom Homebrew CLI arsenal.
 
       Example usage:
-        bump_version script.sh --minor
+        brew_brain --output markdown --output-file arsenal
+        brew_brain checkup
     EOS
   end
 
   test do
-    assert_match "bump_version", shell_output("#{bin}/bump_version --help")
+    assert_match "brew_brain", shell_output("#{bin}/brew_brain --help")
   end
 end
