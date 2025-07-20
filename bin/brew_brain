@@ -2,19 +2,21 @@
 set -euo pipefail
 
 # shellcheck disable=SC2034
-VERSION="1.0.2"
+VERSION="1.0.3"
 
 RAYMON_TAP="raymonepping"
-EXPECTED=(
-  brew-brain-cli
-  bump-version-cli
-  commit-gh-cli
-  folder-tree-cli
-  radar-love-cli
-  repository-audit-cli
-  repository-backup-cli
-  self-doc-gen-cli
-)
+
+# Load configuration file
+CONFIG_FILE="${HOME}/.brew_brain.json"
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  echo "❌ Configuration file $CONFIG_FILE not found."
+  exit 1
+fi
+
+# Load CLI data
+mapfile -t CLI_NAMES < <(jq -r '.tools[].name' "$CONFIG_FILE")
+
+EXPECTED=("${CLI_NAMES[@]}")
 
 ACTION="human"
 OUTPUT=""
@@ -26,39 +28,34 @@ if ! command -v jq &>/dev/null; then
 fi
 
 get_installed_brews() {
-  local info
+  local info regex
   readarray -t all < <(brew list --formula 2>/dev/null || true)
   [[ ${#all[@]} -eq 0 ]] && return
   info=$(brew info --json=v2 "${all[@]}" 2>/dev/null)
-  mapfile -t BREWS < <(echo "$info" | jq -r '
-  .formulae[]? | select(
-    .name | test("^(brew-brain-cli|bump-version-cli|commit-gh-cli|folder-tree-cli|radar-love-cli|repository-audit-cli|repository-backup-cli|self-doc-gen-cli)$")
-  ) | .name // empty
-')
 
+  # Dynamically build regex from CLI_NAMES array
+  regex="^($(IFS=\|; echo "${CLI_NAMES[*]}"))$"
+
+  mapfile -t BREWS < <(echo "$info" | jq -r --arg regex "$regex" '
+    .formulae[]? | select(.name | test($regex)) | .name // empty
+  ')
 }
-
 
 get_installed_version() {
   brew info --json=v2 "$1" 2>/dev/null | jq -r '.formulae[0].versions.stable // empty'
 }
 
 get_latest_version() {
-  local brew="$1" repo=""
-  case "$brew" in
-  brew-brain-cli) desc="Brew Brain: CLI arsenal dashboard" ;;
-  bump-version-cli) repo="homebrew-bump-version-cli" ;;
-  commit-gh-cli) repo="homebrew-commit-gh-cli" ;;
-  folder-tree-cli) repo="homebrew-folder-tree-cli" ;;
-  radar-love-cli) repo="homebrew-radar-love-cli" ;;
-  repository-audit-cli) repo="homebrew-repository-audit-cli" ;;
-  repository-backup-cli) repo="homebrew-repository-backup-cli" ;;
-  self-doc-gen-cli) repo="homebrew-self-doc-gen-cli" ;;
-  *)
+  local brew="$1"
+
+  local repo desc
+  repo=$(jq -r --arg name "$brew" '.tools[] | select(.name == $name) | .repo' "$CONFIG_FILE")
+  desc=$(jq -r --arg name "$brew" '.tools[] | select(.name == $name) | .description' "$CONFIG_FILE")
+
+  if [[ -z "$repo" || "$repo" == "null" ]]; then
     echo "–"
     return 1
-    ;;
-  esac
+  fi
 
   local cache_file="/tmp/raymon_latest_${brew}.ver.json"
   if [[ -f "$cache_file" ]] && [[ $(($(date +%s) - $(stat -f %m "$cache_file" 2>/dev/null || stat -c %Y "$cache_file"))) -lt 300 ]]; then
@@ -87,32 +84,19 @@ get_latest_version() {
   echo "–"
 }
 
-render_human() {
-  if [[ ${#BREWS[@]} -eq 0 ]]; then
-    echo "❌ No Raymon CLI tools found via Homebrew."
-    echo "💡 Try: brew tap raymonepping/folder-tree-cli (and others)"
-    exit 1
-  fi
+get_description() {
+  jq -r --arg name "$1" '.tools[] | select(.name == $name) | .description' "$CONFIG_FILE"
+}
 
+render_human() {
   echo "🧠 Raymon's Homebrew CLI Arsenal (${#BREWS[@]} tools)"
   echo "────────────────────────────────────────────────────────────"
-
   for brew in "${BREWS[@]}"; do
     local_version=$(get_installed_version "$brew")
     latest_version=$(get_latest_version "$brew")
+    desc=$(get_description "$brew")
     symbol="✅"
     [[ "$local_version" != "$latest_version" && "$latest_version" != "–" ]] && symbol="⬆️"
-    case "$brew" in
-    brew-brain-cli) desc="Brew Brain: CLI arsenal dashboard" ;;
-    bump-version-cli) desc="Semantic versioning + changelogs" ;;
-    commit-gh-cli) desc="GitHub commit automation" ;;
-    folder-tree-cli) desc="Visual folder structure + docs" ;;
-    radar-love-cli) desc="Simulated secret leaks + scans" ;;
-    repository-audit-cli) desc="Repo hygiene & reporting" ;;
-    repository-backup-cli) desc="Modular backup + restore" ;;
-    self-doc-gen-cli) desc="Generate README.md from scripts" ;;
-    *) desc="(unknown purpose)" ;;
-    esac
 
     if [[ "$local_version" == "$latest_version" ]]; then
       printf "%-2s %-28s %-10s   %-12s  %s\n" "$symbol" "$brew" "v$local_version" "" "$desc"
@@ -120,11 +104,11 @@ render_human() {
       printf "%-2s %-28s %-10s → %-10s  %s\n" "$symbol" "$brew" "v$local_version" "v$latest_version" "$desc"
     fi
   done
-
   echo "────────────────────────────────────────────────────────────"
   echo "✨ Installed via: brew tap $RAYMON_TAP/*"
   echo "📦 Run: bump_version myscript.sh --patch --message \"Fix bug\""
 }
+
 
 render_markdown() {
   echo "| CLI | Description |"
