@@ -2,12 +2,10 @@
 set -euo pipefail
 
 # shellcheck disable=SC2034
-VERSION="1.0.4"
-
-# shellcheck disable=SC2034
+VERSION="1.0.5"
 RAYMON_TAP="raymonepping"
 
-# --- Dynamic BASE_DIR and lib/tpl lookup ---
+# --- Dynamic BASE_DIR and lib/tpl lookup (robust, Homebrew-style) ---
 if [[ -n "${BREW_BRAIN_HOME:-}" && -d "$BREW_BRAIN_HOME/lib" ]]; then
   BASE_DIR="$BREW_BRAIN_HOME"
 elif command -v brew &>/dev/null; then
@@ -23,18 +21,18 @@ if [[ -z "${BASE_DIR:-}" ]]; then
 fi
 
 LIB_DIR="$BASE_DIR/lib"
-TPL_DIR="$BASE_DIR/tpl"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TPL_DIR=""
 
-# --- Source brew_brain_functions.sh ---
+# Search for lib/functions file (BOTH for Homebrew and local/dev)
 FOUND_FUNCTIONS=0
-SEARCH_LIB_PATHS=(
+search_lib_paths=(
   "$LIB_DIR/brew_brain_functions.sh"
   "$SCRIPT_DIR/../lib/brew_brain_functions.sh"
   "$SCRIPT_DIR/lib/brew_brain_functions.sh"
   "/opt/homebrew/share/brew-brain-cli/lib/brew_brain_functions.sh"
 )
-for path in "${SEARCH_LIB_PATHS[@]}"; do
+for path in "${search_lib_paths[@]}"; do
   if [[ -f "$path" ]]; then
     # shellcheck source=/dev/null
     source "$path"
@@ -43,12 +41,27 @@ for path in "${SEARCH_LIB_PATHS[@]}"; do
   fi
 done
 if [[ $FOUND_FUNCTIONS -eq 0 ]]; then
-  echo "❌ Could not locate brew_brain_functions.sh in: ${SEARCH_LIB_PATHS[*]}"
+  echo "❌ Could not locate brew_brain_functions.sh in: ${search_lib_paths[*]}"
   exit 1
 fi
 
-if [[ ! -d "$TPL_DIR" ]]; then
-  echo "⚠️  Warning: Could not locate tpl/ directory at $TPL_DIR"
+# Search for tpl/ in all common locations
+possible_tpl_dirs=(
+  "$BASE_DIR/tpl"
+  "$SCRIPT_DIR/../tpl"
+  "$SCRIPT_DIR/tpl"
+  "/opt/homebrew/share/brew-brain-cli/tpl"
+  "/opt/homebrew/opt/brew-brain-cli/share/brew-brain-cli/tpl"
+)
+for tdir in "${possible_tpl_dirs[@]}"; do
+  if [[ -d "$tdir" ]]; then
+    TPL_DIR="$tdir"
+    break
+  fi
+done
+if [[ -z "${TPL_DIR:-}" || ! -d "$TPL_DIR" ]]; then
+  echo "❌ Could not locate tpl/ directory in: ${possible_tpl_dirs[*]}"
+  exit 1
 fi
 
 if ! command -v jq &>/dev/null; then
@@ -56,7 +69,7 @@ if ! command -v jq &>/dev/null; then
   exit 1
 fi
 
-# --- CLI argument parsing (order-agnostic, dump/fog support) ---
+# --- CLI argument parsing etc ---
 CONFIG_FILE="${HOME}/.brew_brain.json"
 ACTION="human"
 OUTPUT=""
