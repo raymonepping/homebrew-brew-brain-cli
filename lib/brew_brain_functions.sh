@@ -100,7 +100,7 @@ render_markdown() {
   done
 
   local DATE="$(date '+%Y-%m-%d %H:%M:%S')"
-  local BADGE_DATE="$(date '+%Y-%m-%d_%H:%M:%S')"
+  local BADGE_DATE="$(date '+%Y_%m_%d_%H_%M_%S')"
   local NUM_TOOLS="${#BREWS[@]}"
 
   # Status badges block
