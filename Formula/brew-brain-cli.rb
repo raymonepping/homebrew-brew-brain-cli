@@ -2,10 +2,10 @@ class BrewBrainCli < Formula
 
   desc "Audit, document, and manage your Homebrew CLI arsenal with one meta-tool"
   homepage "https://github.com/raymonepping/brew_brain_cli"
-  url "https://github.com/raymonepping/homebrew-brew-brain-cli/archive/refs/tags/v1.0.9.tar.gz"
-  sha256 "0aab7372a6873dfa33eae9a0840b5dccd21d4c93a495ef3991d936354e43d817"
+  url "https://github.com/raymonepping/homebrew-brew-brain-cli/archive/refs/tags/v1.0.11.tar.gz"
+  sha256 "6a2f892b1e68384d546324ffd9c2a354b5514b8a91cb109d6d618c09c7ff08f4"
   license "MIT"
-  version "1.0.9"
+  version "1.0.11"
 
   depends_on "bash"
   depends_on "jq"
