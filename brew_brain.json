@@ -1,0 +1,13 @@
+{
+  "tools": [
+    {
+      "name": "zstd",
+      "description": "Zstandard is a real-time compression algorithm",
+      "repo": "homebrew-zstd",
+      "install": "brew install zstd",
+      "version": "1.5.7",
+      "source": "homebrew/core"
+    }
+  ],
+  "install_command": "brew install {formula}"
+}

@@ -198,29 +198,37 @@ run_refresh() {
 }
 
 run_checkup() {
-  local config_file="$HOME/.brew_brain.json"
+  # Accept optional config path as argument, default to $HOME/.brew_brain.json
+  local config_file="${1:-$HOME/.brew_brain.json}"
   if [[ ! -f "$config_file" ]]; then
     echo "❌ No config found at $config_file"
     echo "💡 Create one with:"
-    echo '{
-  "expected": [
-    "bump-version-cli",
-    "commit-gh-cli",
-    "folder-tree-cli",
-    "radar-love-cli",
-    "repository-audit-cli",
-    "repository-backup-cli",
-    "self-doc-gen-cli"
+    cat <<EOF >"$config_file"
+{
+  "tools": [
+    { "name": "folder-tree-cli", "install": "brew install raymonepping/folder-tree-cli", "track": "true" }
+    // ... more ...
   ]
-}' >"$config_file"
+}
+EOF
     exit 1
   fi
 
   echo "🩺 Running brew_brain checkup..."
   echo "──────────────────────────────────────────────"
 
-  mapfile -t EXPECTED_JSON < <(jq -r '.expected[]' "$config_file")
-  for name in "${EXPECTED_JSON[@]}"; do
+  # Use only tracked tools if any, else all tools
+  if jq -e '.tools[] | select(.track == "true")' "$config_file" >/dev/null 2>&1; then
+    mapfile -t TRACKED_NAMES < <(jq -r '.tools[] | select(.track == "true") | .name' "$config_file")
+  else
+    mapfile -t TRACKED_NAMES < <(jq -r '.tools[].name' "$config_file")
+  fi
+
+  for name in "${TRACKED_NAMES[@]}"; do
+    # Look up install command for this tool; fallback is 'brew install $name'
+    install_cmd=$(jq -r --arg name "$name" '.tools[] | select(.name == $name) | .install // empty' "$config_file")
+    [[ -z "$install_cmd" ]] && install_cmd="brew install $name"
+
     if [[ " ${BREWS[*]} " == *" $name "* ]]; then
       version=$(get_installed_version "$name")
       echo "✅ $name is installed (v$version)"
@@ -229,7 +237,7 @@ run_checkup() {
       read -rp "👉 Do you want to install $name now? (y/n): " answer
       if [[ "$answer" =~ ^[Yy]$ ]]; then
         echo "📦 Installing $name..."
-        brew install "raymonepping/$name/$name"
+        eval "$install_cmd"
       else
         echo "🚫 Skipping $name"
       fi

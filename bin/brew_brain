@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # shellcheck disable=SC2034
-VERSION="1.1.2"
+VERSION="1.2.0"
 RAYMON_TAP="raymonepping"
 
 # For Homebrew-installed CLI, always start with Homebrew prefix!
@@ -61,6 +61,8 @@ CONFIG_FILE="${HOME}/.brew_brain.json"
 ACTION="human"
 OUTPUT=""
 OUTPUT_FILE=""
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # --- Dump/fog passthrough (before regular CLI parsing) ---
 if [[ $# -ge 1 && ("$1" == "--dump" || "$1" == "--fog" || "$1" == "fog") ]]; then
