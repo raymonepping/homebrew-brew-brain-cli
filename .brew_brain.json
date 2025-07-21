@@ -1,0 +1,902 @@
+{
+  "tools": [
+    {
+      "name": "awscli",
+      "description": "Official Amazon AWS command-line interface",
+      "repo": "homebrew-awscli",
+      "install": "brew install awscli",
+      "version": "2.27.55",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "bash",
+      "description": "Bourne-Again SHell, a UNIX command interpreter",
+      "repo": "homebrew-bash",
+      "install": "brew install bash",
+      "version": "5.3",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "black",
+      "description": "Python code formatter",
+      "repo": "homebrew-black",
+      "install": "brew install black",
+      "version": "25.1.0",
+      "source": "homebrew/core",
+      "track": "true"
+    },
+    {
+      "name": "boundary",
+      "description": "Boundary",
+      "repo": "homebrew-boundary",
+      "install": "brew install hashicorp/tap/boundary",
+      "version": "0.19.3",
+      "source": "hashicorp/tap",
+      "track": "true"      
+    },
+    {
+      "name": "brew-brain-cli",
+      "description": "Audit, document, and manage your Homebrew CLI arsenal with one meta-tool",
+      "repo": "homebrew-brew-brain-cli",
+      "install": "brew install raymonepping/brew-brain-cli",
+      "version": "1.0.3",
+      "source": "raymonepping/brew-brain-cli",
+      "track": "true"      
+    },
+    {
+      "name": "broot",
+      "description": "New way to see and navigate directory trees",
+      "repo": "homebrew-broot",
+      "install": "brew install broot",
+      "version": "1.47.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "brotli",
+      "description": "Generic-purpose lossless compression algorithm by Google",
+      "repo": "homebrew-brotli",
+      "install": "brew install brotli",
+      "version": "1.1.0",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "bump-version-cli",
+      "description": "CLI tool for bumping semantic versions in Bash scripts and updating changelogs",
+      "repo": "homebrew-bump-version-cli",
+      "install": "brew install raymonepping/bump-version-cli",
+      "version": "0.6.1",
+      "source": "raymonepping/bump-version-cli",
+      "track": "true"      
+    },
+    {
+      "name": "bump_version_cli",
+      "description": "CLI tool for bumping semantic versions in Bash scripts and updating changelogs",
+      "repo": "homebrew-bump_version_cli",
+      "install": "brew install raymonepping/bump-version-cli",
+      "version": "0.5.11",
+      "source": "raymonepping/bump-version-cli"
+    },
+    {
+      "name": "c-ares",
+      "description": "Asynchronous DNS library",
+      "repo": "homebrew-c-ares",
+      "install": "brew install c-ares",
+      "version": "1.34.5",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "ca-certificates",
+      "description": "Mozilla CA certificate store",
+      "repo": "homebrew-ca-certificates",
+      "install": "brew install ca-certificates",
+      "version": "2025-07-15",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "capstone",
+      "description": "Multi-platform, multi-architecture disassembly framework",
+      "repo": "homebrew-capstone",
+      "install": "brew install capstone",
+      "version": "5.0.6",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "cloudflared",
+      "description": "Cloudflare Tunnel client (formerly Argo Tunnel)",
+      "repo": "homebrew-cloudflared",
+      "install": "brew install cloudflared",
+      "version": "2025.7.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "colima",
+      "description": "Container runtimes on MacOS (and Linux) with minimal setup",
+      "repo": "homebrew-colima",
+      "install": "brew install colima",
+      "version": "0.8.1",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "commit-gh-cli",
+      "description": "CLI toolkit for visualizing folder structures with markdown reports",
+      "repo": "homebrew-commit-gh-cli",
+      "install": "brew install raymonepping/commit-gh-cli",
+      "version": "1.1.0",
+      "source": "raymonepping/commit-gh-cli",
+      "track": "true"      
+    },
+    {
+      "name": "coreutils",
+      "description": "GNU File, Shell, and Text utilities",
+      "repo": "homebrew-coreutils",
+      "install": "brew install coreutils",
+      "version": "9.7",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "dive",
+      "description": "Tool for exploring each layer in a docker image",
+      "repo": "homebrew-dive",
+      "install": "brew install dive",
+      "version": "0.13.1",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "docker",
+      "description": "Pack, ship and run any application as a lightweight container",
+      "repo": "homebrew-docker",
+      "install": "brew install docker",
+      "version": "28.3.2",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "docker-completion",
+      "description": "Bash, Zsh and Fish completion for Docker",
+      "repo": "homebrew-docker-completion",
+      "install": "brew install docker-completion",
+      "version": "28.3.2",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "docker-compose",
+      "description": "Isolated development environments using Docker",
+      "repo": "homebrew-docker-compose",
+      "install": "brew install docker-compose",
+      "version": "2.38.2",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "dockerfmt",
+      "description": "Dockerfile format and parser. a modern dockfmt",
+      "repo": "homebrew-dockerfmt",
+      "install": "brew install dockerfmt",
+      "version": "0.3.7",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "dockle",
+      "description": "Simple security auditing, helping build the Best Docker Images",
+      "repo": "homebrew-dockle",
+      "install": "brew install goodwithtech/r/dockle",
+      "version": "0.4.15",
+      "source": "goodwithtech/r",
+      "track": "true"      
+    },
+    {
+      "name": "dockly",
+      "description": "Immersive terminal interface for managing docker containers and services",
+      "repo": "homebrew-dockly",
+      "install": "brew install dockly",
+      "version": "3.24.5",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "doormat-cli",
+      "description": "Doormat CLI -- Command Line Interface to the Doormat Service",
+      "repo": "homebrew-doormat-cli",
+      "install": "brew install hashicorp/security/doormat-cli",
+      "version": "4.5.1",
+      "source": "hashicorp/security",
+      "track": "true"      
+    },
+    {
+      "name": "dtc",
+      "description": "Device tree compiler",
+      "repo": "homebrew-dtc",
+      "install": "brew install dtc",
+      "version": "1.7.2",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "eslint",
+      "description": "AST-based pattern checker for JavaScript",
+      "repo": "homebrew-eslint",
+      "install": "brew install eslint",
+      "version": "9.31.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "folder-tree-cli",
+      "description": "CLI toolkit for visualizing folder structures with markdown reports",
+      "repo": "homebrew-folder-tree-cli",
+      "install": "brew install raymonepping/folder-tree-cli",
+      "version": "1.3.4",
+      "source": "raymonepping/folder-tree-cli",
+      "track": "true"      
+    },
+    {
+      "name": "gawk",
+      "description": "GNU awk utility",
+      "repo": "homebrew-gawk",
+      "install": "brew install gawk",
+      "version": "5.3.1",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "gettext",
+      "description": "GNU internationalization (i18n) and localization (l10n) library",
+      "repo": "homebrew-gettext",
+      "install": "brew install gettext",
+      "version": "0.26",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "gh",
+      "description": "GitHub command-line tool",
+      "repo": "homebrew-gh",
+      "install": "brew install gh",
+      "version": "2.76.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "git-filter-repo",
+      "description": "Quickly rewrite git repository history",
+      "repo": "homebrew-git-filter-repo",
+      "install": "brew install git-filter-repo",
+      "version": "2.47.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "glib",
+      "description": "Core application library for C",
+      "repo": "homebrew-glib",
+      "install": "brew install glib",
+      "version": "2.84.3",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "gmp",
+      "description": "GNU multiple precision arithmetic library",
+      "repo": "homebrew-gmp",
+      "install": "brew install gmp",
+      "version": "6.3.0",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "gnutls",
+      "description": "GNU Transport Layer Security (TLS) Library",
+      "repo": "homebrew-gnutls",
+      "install": "brew install gnutls",
+      "version": "3.8.10",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "go",
+      "description": "Open source programming language to build simple/reliable/efficient software",
+      "repo": "homebrew-go",
+      "install": "brew install go",
+      "version": "1.24.5",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "grype",
+      "description": "Vulnerability scanner for container images and filesystems",
+      "repo": "homebrew-grype",
+      "install": "brew install grype",
+      "version": "0.96.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "hadolint",
+      "description": "Smarter Dockerfile linter to validate best practices",
+      "repo": "homebrew-hadolint",
+      "install": "brew install hadolint",
+      "version": "2.12.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "hcp",
+      "description": "HCP CLI",
+      "repo": "homebrew-hcp",
+      "install": "brew install hashicorp/tap/hcp",
+      "version": "0.10.0",
+      "source": "hashicorp/tap",
+      "track": "true"      
+    },
+    {
+      "name": "icu4c@77",
+      "description": "C/C++ and Java libraries for Unicode and globalization",
+      "repo": "homebrew-icu4c@77",
+      "install": "brew install icu4c@77",
+      "version": "77.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "jpeg-turbo",
+      "description": "JPEG image codec that aids compression and decompression",
+      "repo": "homebrew-jpeg-turbo",
+      "install": "brew install jpeg-turbo",
+      "version": "3.1.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "jq",
+      "description": "Lightweight and flexible command-line JSON processor",
+      "repo": "homebrew-jq",
+      "install": "brew install jq",
+      "version": "1.8.1",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "just",
+      "description": "Handy way to save and run project-specific commands",
+      "repo": "homebrew-just",
+      "install": "brew install just",
+      "version": "1.42.3",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "k3d",
+      "description": "Little helper to run CNCF's k3s in Docker",
+      "repo": "homebrew-k3d",
+      "install": "brew install k3d",
+      "version": "5.8.3",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libevent",
+      "description": "Asynchronous event library",
+      "repo": "homebrew-libevent",
+      "install": "brew install libevent",
+      "version": "2.1.12",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libidn2",
+      "description": "International domain name library (IDNA2008, Punycode and TR46)",
+      "repo": "homebrew-libidn2",
+      "install": "brew install libidn2",
+      "version": "2.3.8",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libnghttp2",
+      "description": "HTTP/2 C Library",
+      "repo": "homebrew-libnghttp2",
+      "install": "brew install libnghttp2",
+      "version": "1.66.0",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libpng",
+      "description": "Library for manipulating PNG images",
+      "repo": "homebrew-libpng",
+      "install": "brew install libpng",
+      "version": "1.6.50",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libslirp",
+      "description": "General purpose TCP-IP emulator",
+      "repo": "homebrew-libslirp",
+      "install": "brew install libslirp",
+      "version": "4.9.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libssh",
+      "description": "C library SSHv1/SSHv2 client and server protocols",
+      "repo": "homebrew-libssh",
+      "install": "brew install libssh",
+      "version": "0.11.2",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libtasn1",
+      "description": "ASN.1 structure parser library",
+      "repo": "homebrew-libtasn1",
+      "install": "brew install libtasn1",
+      "version": "4.20.0",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libunistring",
+      "description": "C string library for manipulating Unicode strings",
+      "repo": "homebrew-libunistring",
+      "install": "brew install libunistring",
+      "version": "1.3",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libusb",
+      "description": "Library for USB device access",
+      "repo": "homebrew-libusb",
+      "install": "brew install libusb",
+      "version": "1.0.29",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libuv",
+      "description": "Multi-platform support library with a focus on asynchronous I/O",
+      "repo": "homebrew-libuv",
+      "install": "brew install libuv",
+      "version": "1.51.0",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libxau",
+      "description": "X.Org: A Sample Authorization Protocol for X",
+      "repo": "homebrew-libxau",
+      "install": "brew install libxau",
+      "version": "1.0.12",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libxcb",
+      "description": "X.Org: Interface to the X Window System protocol",
+      "repo": "homebrew-libxcb",
+      "install": "brew install libxcb",
+      "version": "1.17.0",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libxdmcp",
+      "description": "X.Org: X Display Manager Control Protocol library",
+      "repo": "homebrew-libxdmcp",
+      "install": "brew install libxdmcp",
+      "version": "1.1.5",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "libyaml",
+      "description": "YAML Parser",
+      "repo": "homebrew-libyaml",
+      "install": "brew install libyaml",
+      "version": "0.2.5",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "lima",
+      "description": "Linux virtual machines",
+      "repo": "homebrew-lima",
+      "install": "brew install lima",
+      "version": "1.2.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "lz4",
+      "description": "Extremely Fast Compression algorithm",
+      "repo": "homebrew-lz4",
+      "install": "brew install lz4",
+      "version": "1.10.0",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "lzo",
+      "description": "Real-time data compression library",
+      "repo": "homebrew-lzo",
+      "install": "brew install lzo",
+      "version": "2.10",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "mintoolkit",
+      "description": "Minify and secure Docker images",
+      "repo": "homebrew-mintoolkit",
+      "install": "brew install mintoolkit",
+      "version": "1.41.7",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "mpdecimal",
+      "description": "Library for decimal floating point arithmetic",
+      "repo": "homebrew-mpdecimal",
+      "install": "brew install mpdecimal",
+      "version": "4.0.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "mpfr",
+      "description": "C library for multiple-precision floating-point computations",
+      "repo": "homebrew-mpfr",
+      "install": "brew install mpfr",
+      "version": "4.2.2",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "ncurses",
+      "description": "Text-based UI library",
+      "repo": "homebrew-ncurses",
+      "install": "brew install ncurses",
+      "version": "6.5",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "nettle",
+      "description": "Low-level cryptographic library",
+      "repo": "homebrew-nettle",
+      "install": "brew install nettle",
+      "version": "3.10.2",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "node",
+      "description": "Platform built on V8 to build network applications",
+      "repo": "homebrew-node",
+      "install": "brew install node",
+      "version": "24.4.1",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "nomad",
+      "description": "Distributed, Highly Available, Datacenter-Aware Scheduler",
+      "repo": "homebrew-nomad",
+      "install": "brew install nomad",
+      "version": "1.6.2",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "oniguruma",
+      "description": "Regular expressions library",
+      "repo": "homebrew-oniguruma",
+      "install": "brew install oniguruma",
+      "version": "6.9.10",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "openssl@3",
+      "description": "Cryptography and SSL/TLS Toolkit",
+      "repo": "homebrew-openssl@3",
+      "install": "brew install openssl@3",
+      "version": "3.5.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "p11-kit",
+      "description": "Library to load and enumerate PKCS#11 modules",
+      "repo": "homebrew-p11-kit",
+      "install": "brew install p11-kit",
+      "version": "0.25.5",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "packer",
+      "description": "Tool for creating identical machine images for multiple platforms",
+      "repo": "homebrew-packer",
+      "install": "brew install packer",
+      "version": "1.9.4",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "pcre2",
+      "description": "Perl compatible regular expressions library with a new API",
+      "repo": "homebrew-pcre2",
+      "install": "brew install pcre2",
+      "version": "10.45",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "pixman",
+      "description": "Low-level library for pixel manipulation",
+      "repo": "homebrew-pixman",
+      "install": "brew install pixman",
+      "version": "0.46.4",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "podman",
+      "description": "Tool for managing OCI containers and pods",
+      "repo": "homebrew-podman",
+      "install": "brew install podman",
+      "version": "5.5.2",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "prettier",
+      "description": "Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML",
+      "repo": "homebrew-prettier",
+      "install": "brew install prettier",
+      "version": "3.6.2",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "pylint",
+      "description": "It's not just a linter that annoys you!",
+      "repo": "homebrew-pylint",
+      "install": "brew install pylint",
+      "version": "3.3.7",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "python@3.13",
+      "description": "Interpreted, interactive, object-oriented programming language",
+      "repo": "homebrew-python@3.13",
+      "install": "brew install python@3.13",
+      "version": "3.13.5",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "qemu",
+      "description": "Generic machine emulator and virtualizer",
+      "repo": "homebrew-qemu",
+      "install": "brew install qemu",
+      "version": "10.0.2",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "radar-love-cli",
+      "description": "CLI toolkit for simulating secret leaks and triggering GitHub PR scans",
+      "repo": "homebrew-radar-love-cli",
+      "install": "brew install raymonepping/radar_love_cli/radar-love-cli",
+      "version": "2.9.1",
+      "source": "raymonepping/radar_love_cli",
+      "track": "true"      
+    },
+    {
+      "name": "readline",
+      "description": "Library for command-line editing",
+      "repo": "homebrew-readline",
+      "install": "brew install readline",
+      "version": "8.3.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "repository-audit-cli",
+      "description": "CLI toolkit for auditing Git repositories and folders with markdown/csv/json reports",
+      "repo": "homebrew-repository-audit-cli",
+      "install": "brew install raymonepping/repository-audit-cli",
+      "version": "1.2.0",
+      "source": "raymonepping/repository-audit-cli",
+      "track": "true"      
+    },
+    {
+      "name": "repository-backup-cli",
+      "description": "CLI toolkit for backing up GitHub repositories with tagging, ignore rules, and recovery",
+      "repo": "homebrew-repository-backup-cli",
+      "install": "brew install raymonepping/repository-backup-cli",
+      "version": "1.7.1",
+      "source": "raymonepping/repository-backup-cli",
+      "track": "true"      
+    },
+    {
+      "name": "ripgrep",
+      "description": "Search tool like grep and The Silver Searcher",
+      "repo": "homebrew-ripgrep",
+      "install": "brew install ripgrep",
+      "version": "14.1.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "self-doc-gen-cli",
+      "description": "Self-documenting CLI generator with markdown templates and folder visualization",
+      "repo": "homebrew-self-doc-gen-cli",
+      "install": "brew install raymonepping/self-doc-gen-cli",
+      "version": "1.2.0",
+      "source": "raymonepping/self-doc-gen-cli",
+      "track": "true"      
+    },
+    {
+      "name": "shellcheck",
+      "description": "Static analysis and lint tool, for (ba)sh scripts",
+      "repo": "homebrew-shellcheck",
+      "install": "brew install shellcheck",
+      "version": "0.10.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "shfmt",
+      "description": "Autoformat shell script source code",
+      "repo": "homebrew-shfmt",
+      "install": "brew install shfmt",
+      "version": "3.12.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "snappy",
+      "description": "Compression/decompression library aiming for high speed",
+      "repo": "homebrew-snappy",
+      "install": "brew install snappy",
+      "version": "1.2.2",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "snyk-cli",
+      "description": "Scans and monitors projects for security vulnerabilities",
+      "repo": "homebrew-snyk-cli",
+      "install": "brew install snyk-cli",
+      "version": "1.1298.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "socat",
+      "description": "SOcket CAT: netcat on steroids",
+      "repo": "homebrew-socat",
+      "install": "brew install socat",
+      "version": "1.8.0.3",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "sqlite",
+      "description": "Command-line interface for SQLite",
+      "repo": "homebrew-sqlite",
+      "install": "brew install sqlite",
+      "version": "3.50.3",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "syft",
+      "description": "CLI for generating a Software Bill of Materials from container images",
+      "repo": "homebrew-syft",
+      "install": "brew install syft",
+      "version": "1.28.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "terraform",
+      "description": "Tool to build, change, and version infrastructure",
+      "repo": "homebrew-terraform",
+      "install": "brew install terraform",
+      "version": "1.5.7",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "terraform-docs",
+      "description": "Tool to generate documentation from Terraform modules",
+      "repo": "homebrew-terraform-docs",
+      "install": "brew install terraform-docs",
+      "version": "0.20.0",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "tree",
+      "description": "Display directories as trees (with optional color/HTML output)",
+      "repo": "homebrew-tree",
+      "install": "brew install tree",
+      "version": "2.2.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "trivy",
+      "description": "Vulnerability scanner for container images, file systems, and Git repos",
+      "repo": "homebrew-trivy",
+      "install": "brew install trivy",
+      "version": "0.64.1",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "unbound",
+      "description": "Validating, recursive, caching DNS resolver",
+      "repo": "homebrew-unbound",
+      "install": "brew install unbound",
+      "version": "1.23.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "unknown",
+      "description": "No description available",
+      "repo": "homebrew-unknown",
+      "install": "brew install unknown",
+      "version": "",
+      "source": ""
+    },
+    {
+      "name": "vault",
+      "description": "Secures, stores, and tightly controls access to secrets",
+      "repo": "homebrew-vault",
+      "install": "brew install vault",
+      "version": "1.14.4",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "vault-radar",
+      "description": "Vault Radar",
+      "repo": "homebrew-vault-radar",
+      "install": "brew install hashicorp/tap/vault-radar",
+      "version": "0.29.0",
+      "source": "hashicorp/tap",
+      "track": "true"      
+    },
+    {
+      "name": "vde",
+      "description": "Ethernet compliant virtual network",
+      "repo": "homebrew-vde",
+      "install": "brew install vde",
+      "version": "2.3.3",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "waypoint",
+      "description": "Tool to build, deploy, and release any application on any platform",
+      "repo": "homebrew-waypoint",
+      "install": "brew install waypoint",
+      "version": "0.11.4",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "xorgproto",
+      "description": "X.Org: Protocol Headers",
+      "repo": "homebrew-xorgproto",
+      "install": "brew install xorgproto",
+      "version": "2024.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "xz",
+      "description": "General-purpose data compression with high compression ratio",
+      "repo": "homebrew-xz",
+      "install": "brew install xz",
+      "version": "5.8.1",
+      "source": "homebrew/core"
+    },
+    {
+      "name": "yamllint",
+      "description": "Linter for YAML files",
+      "repo": "homebrew-yamllint",
+      "install": "brew install yamllint",
+      "version": "1.37.1",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "yq",
+      "description": "Process YAML, JSON, XML, CSV and properties documents from the CLI",
+      "repo": "homebrew-yq",
+      "install": "brew install yq",
+      "version": "4.46.1",
+      "source": "homebrew/core",
+      "track": "true"      
+    },
+    {
+      "name": "zstd",
+      "description": "Zstandard is a real-time compression algorithm",
+      "repo": "homebrew-zstd",
+      "install": "brew install zstd",
+      "version": "1.5.7",
+      "source": "homebrew/core"
+    }
+  ],
+  "install_command": "brew install {formula}"
+}

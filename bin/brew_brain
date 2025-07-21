@@ -2,237 +2,96 @@
 set -euo pipefail
 
 # shellcheck disable=SC2034
-VERSION="1.0.3"
+VERSION="1.0.4"
 
+# shellcheck disable=SC2034
 RAYMON_TAP="raymonepping"
 
-# Load configuration file
-CONFIG_FILE="${HOME}/.brew_brain.json"
-if [[ ! -f "$CONFIG_FILE" ]]; then
-  echo "❌ Configuration file $CONFIG_FILE not found."
+# --- Dynamic BASE_DIR and lib/tpl lookup ---
+if [[ -n "${BREW_BRAIN_HOME:-}" && -d "$BREW_BRAIN_HOME/lib" ]]; then
+  BASE_DIR="$BREW_BRAIN_HOME"
+elif command -v brew &>/dev/null; then
+  HOMEBREW_PREFIX="$(brew --prefix 2>/dev/null || true)"
+  if [[ -d "$HOMEBREW_PREFIX/share/brew-brain-cli/lib" ]]; then
+    BASE_DIR="$HOMEBREW_PREFIX/share/brew-brain-cli"
+  elif [[ -d "$HOMEBREW_PREFIX/opt/brew-brain-cli/share/brew-brain-cli/lib" ]]; then
+    BASE_DIR="$HOMEBREW_PREFIX/opt/brew-brain-cli/share/brew-brain-cli"
+  fi
+fi
+if [[ -z "${BASE_DIR:-}" ]]; then
+  BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+fi
+
+LIB_DIR="$BASE_DIR/lib"
+TPL_DIR="$BASE_DIR/tpl"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# --- Source brew_brain_functions.sh ---
+FOUND_FUNCTIONS=0
+SEARCH_LIB_PATHS=(
+  "$LIB_DIR/brew_brain_functions.sh"
+  "$SCRIPT_DIR/../lib/brew_brain_functions.sh"
+  "$SCRIPT_DIR/lib/brew_brain_functions.sh"
+  "/opt/homebrew/share/brew-brain-cli/lib/brew_brain_functions.sh"
+)
+for path in "${SEARCH_LIB_PATHS[@]}"; do
+  if [[ -f "$path" ]]; then
+    # shellcheck source=/dev/null
+    source "$path"
+    FOUND_FUNCTIONS=1
+    break
+  fi
+done
+if [[ $FOUND_FUNCTIONS -eq 0 ]]; then
+  echo "❌ Could not locate brew_brain_functions.sh in: ${SEARCH_LIB_PATHS[*]}"
   exit 1
 fi
 
-# Load CLI data
-mapfile -t CLI_NAMES < <(jq -r '.tools[].name' "$CONFIG_FILE")
-
-EXPECTED=("${CLI_NAMES[@]}")
-
-ACTION="human"
-OUTPUT=""
-OUTPUT_FILE=""
+if [[ ! -d "$TPL_DIR" ]]; then
+  echo "⚠️  Warning: Could not locate tpl/ directory at $TPL_DIR"
+fi
 
 if ! command -v jq &>/dev/null; then
   echo "❌ This script requires 'jq'. Install it with: brew install jq"
   exit 1
 fi
 
-get_installed_brews() {
-  local info regex
-  readarray -t all < <(brew list --formula 2>/dev/null || true)
-  [[ ${#all[@]} -eq 0 ]] && return
-  info=$(brew info --json=v2 "${all[@]}" 2>/dev/null)
+# --- CLI argument parsing (order-agnostic, dump/fog support) ---
+CONFIG_FILE="${HOME}/.brew_brain.json"
+ACTION="human"
+OUTPUT=""
+OUTPUT_FILE=""
 
-  # Dynamically build regex from CLI_NAMES array
-  regex="^($(IFS=\|; echo "${CLI_NAMES[*]}"))$"
-
-  mapfile -t BREWS < <(echo "$info" | jq -r --arg regex "$regex" '
-    .formulae[]? | select(.name | test($regex)) | .name // empty
-  ')
-}
-
-get_installed_version() {
-  brew info --json=v2 "$1" 2>/dev/null | jq -r '.formulae[0].versions.stable // empty'
-}
-
-get_latest_version() {
-  local brew="$1"
-
-  local repo desc
-  repo=$(jq -r --arg name "$brew" '.tools[] | select(.name == $name) | .repo' "$CONFIG_FILE")
-  desc=$(jq -r --arg name "$brew" '.tools[] | select(.name == $name) | .description' "$CONFIG_FILE")
-
-  if [[ -z "$repo" || "$repo" == "null" ]]; then
-    echo "–"
-    return 1
-  fi
-
-  local cache_file="/tmp/raymon_latest_${brew}.ver.json"
-  if [[ -f "$cache_file" ]] && [[ $(($(date +%s) - $(stat -f %m "$cache_file" 2>/dev/null || stat -c %Y "$cache_file"))) -lt 300 ]]; then
-    jq -r '.version // "–"' "$cache_file" 2>/dev/null && return
-  fi
-
-  local rel ver
-  rel=$(curl -fsSL "https://api.github.com/repos/raymonepping/${repo}/releases/latest" 2>/dev/null || echo "")
-  ver=$(echo "$rel" | jq -er '.tag_name // empty' 2>/dev/null | sed 's/^v//' || true)
-  if [[ -n "$ver" && "$ver" != "null" ]]; then
-    jq -n --arg version "$ver" '{version:$version,"source":"release"}' >"$cache_file"
-    echo "$ver"
-    return
-  fi
-
-  local tag_resp tag
-  tag_resp=$(curl -fsSL "https://api.github.com/repos/raymonepping/${repo}/tags" 2>/dev/null || echo "")
-  tag=$(echo "$tag_resp" | jq -er '[.[] | select(.name? and (.name | type == "string") and (.name | test("^v?[0-9]+\\.[0-9]+\\.[0-9]+$")) )][0].name // empty' 2>/dev/null | sed 's/^v//' || true)
-  if [[ -n "$tag" && "$tag" != "null" ]]; then
-    jq -n --arg version "$tag" '{version:$version,"source":"tag"}' >"$cache_file"
-    echo "$tag"
-    return
-  fi
-
-  jq -n --arg version "–" '{version:$version,"source":"none"}' >"$cache_file"
-  echo "–"
-}
-
-get_description() {
-  jq -r --arg name "$1" '.tools[] | select(.name == $name) | .description' "$CONFIG_FILE"
-}
-
-render_human() {
-  echo "🧠 Raymon's Homebrew CLI Arsenal (${#BREWS[@]} tools)"
-  echo "────────────────────────────────────────────────────────────"
-  for brew in "${BREWS[@]}"; do
-    local_version=$(get_installed_version "$brew")
-    latest_version=$(get_latest_version "$brew")
-    desc=$(get_description "$brew")
-    symbol="✅"
-    [[ "$local_version" != "$latest_version" && "$latest_version" != "–" ]] && symbol="⬆️"
-
-    if [[ "$local_version" == "$latest_version" ]]; then
-      printf "%-2s %-28s %-10s   %-12s  %s\n" "$symbol" "$brew" "v$local_version" "" "$desc"
-    else
-      printf "%-2s %-28s %-10s → %-10s  %s\n" "$symbol" "$brew" "v$local_version" "v$latest_version" "$desc"
+# --- Dump/fog passthrough (before regular CLI parsing) ---
+if [[ $# -ge 1 && ("$1" == "--dump" || "$1" == "--fog" || "$1" == "fog") ]]; then
+  DUMP_CMD=""
+  SEARCH_DUMP_PATHS=(
+    "$LIB_DIR/brew_brain_dump.sh"
+    "$SCRIPT_DIR/../lib/brew_brain_dump.sh"
+    "$SCRIPT_DIR/lib/brew_brain_dump.sh"
+    "/opt/homebrew/share/brew-brain-cli/lib/brew_brain_dump.sh"
+  )
+  for path in "${SEARCH_DUMP_PATHS[@]}"; do
+    if [[ -f "$path" ]]; then
+      DUMP_CMD="$path"
+      break
     fi
   done
-  echo "────────────────────────────────────────────────────────────"
-  echo "✨ Installed via: brew tap $RAYMON_TAP/*"
-  echo "📦 Run: bump_version myscript.sh --patch --message \"Fix bug\""
-}
-
-
-render_markdown() {
-  echo "| CLI | Description |"
-  echo "|-----|-------------|"
-  for brew in "${BREWS[@]}"; do
-    case "$brew" in
-    brew-brain-cli) desc="Brew Brain: CLI arsenal dashboard" ;;
-    bump-version-cli) echo "| \`$brew\` | Semantic versioning + changelogs |" ;;
-    commit-gh-cli) echo "| \`$brew\` | GitHub commit automation |" ;;
-    folder-tree-cli) echo "| \`$brew\` | Visual folder structure + docs |" ;;
-    radar-love-cli) echo "| \`$brew\` | Simulated secret leaks + scans |" ;;
-    repository-audit-cli) echo "| \`$brew\` | Repo hygiene & reporting |" ;;
-    repository-backup-cli) echo "| \`$brew\` | Modular backup + restore |" ;;
-    self-doc-gen-cli) echo "| \`$brew\` | Generate README.md from scripts |" ;;
-    *) echo "| \`$brew\` | Unknown |" ;;
-    esac
-  done
-}
-
-render_json() {
-  echo "["
-  local first=1
-  for brew in "${BREWS[@]}"; do
-    [[ $first -eq 0 ]] && echo ","
-    first=0
-    case "$brew" in
-    brew-brain-cli) desc="Brew Brain: CLI arsenal dashboard" ;;
-    bump-version-cli) desc="Semantic versioning + changelogs" ;;
-    commit-gh-cli) desc="GitHub commit automation" ;;
-    folder-tree-cli) desc="Visual folder structure + docs" ;;
-    radar-love-cli) desc="Simulated secret leaks + scans" ;;
-    repository-audit-cli) desc="Repo hygiene & reporting" ;;
-    repository-backup-cli) desc="Modular backup + restore" ;;
-    self-doc-gen-cli) desc="Generate README.md from scripts" ;;
-    *) desc="Unknown" ;;
-    esac
-    echo "  { \"name\": \"$brew\", \"description\": \"$desc\" }"
-  done
-  echo "]"
-}
-
-render_table() {
-  printf "%-25s %-10s %-10s\n" "CLI" "Local" "Latest"
-  printf "%-25s %-10s %-10s\n" "---" "-----" "------"
-  for brew in "${BREWS[@]}"; do
-    local_version=$(get_installed_version "$brew")
-    latest_version=$(get_latest_version "$brew")
-    printf "%-25s %-10s %-10s\n" "$brew" "v$local_version" "v$latest_version"
-  done
-}
-
-run_doctor() {
-  echo "🩺 Running Raymon Doctor..."
-  echo "──────────────────────────────────────────────"
-  for name in "${EXPECTED[@]}"; do
-    if [[ " ${BREWS[*]} " == *" $name "* ]]; then
-      version=$(get_installed_version "$name")
-      echo "✅ $name is installed (v$version)"
-    else
-      echo "❌ $name is missing"
-    fi
-  done
-}
-
-run_refresh() {
-  echo "🔄 Checking for CLI updates from GitHub..."
-  echo "──────────────────────────────────────────────"
-  for brew in "${BREWS[@]}"; do
-    local_version=$(get_installed_version "$brew")
-    latest_version=$(get_latest_version "$brew")
-    [[ "$latest_version" == "null" || -z "$latest_version" ]] && latest_version="–"
-    if [[ "$latest_version" == "null" || -z "$latest_version" ]]; then
-      echo "❓ $brew: unable to fetch latest release"
-    elif [[ "$local_version" == "$latest_version" ]]; then
-      echo "✅ $brew is up to date (v$local_version)"
-    else
-      echo "⬆️  $brew: local v$local_version → latest v$latest_version"
-    fi
-  done
-}
-
-run_checkup() {
-  local config_file="$HOME/.brew_brain.json"
-  if [[ ! -f "$config_file" ]]; then
-    echo "❌ No config found at $config_file"
-    echo "💡 Create one with:"
-    echo '{
-  "expected": [
-    "bump-version-cli",
-    "commit-gh-cli",
-    "folder-tree-cli",
-    "radar-love-cli",
-    "repository-audit-cli",
-    "repository-backup-cli",
-    "self-doc-gen-cli"
-  ]
-}' >"$config_file"
+  if [[ -z "$DUMP_CMD" ]]; then
+    echo "❌ Could not find brew_brain_dump.sh in: ${SEARCH_DUMP_PATHS[*]}"
     exit 1
   fi
+  exec "$DUMP_CMD" "${@:2}"
+  exit 0
+fi
 
-  echo "🩺 Running brew_brain checkup..."
-  echo "──────────────────────────────────────────────"
-
-  mapfile -t EXPECTED_JSON < <(jq -r '.expected[]' "$config_file")
-  for name in "${EXPECTED_JSON[@]}"; do
-    if [[ " ${BREWS[*]} " == *" $name "* ]]; then
-      version=$(get_installed_version "$name")
-      echo "✅ $name is installed (v$version)"
-    else
-      echo "❌ $name is missing"
-      read -rp "👉 Do you want to install $name now? (y/n): " answer
-      if [[ "$answer" =~ ^[Yy]$ ]]; then
-        echo "📦 Installing $name..."
-        brew install "raymonepping/$name/$name"
-      else
-        echo "🚫 Skipping $name"
-      fi
-    fi
-  done
-}
-
-# --- Argument parsing (handle order-agnostic) ---
+# --- Standard CLI parsing ---
 while [[ $# -gt 0 ]]; do
   case "$1" in
+  --config)
+    CONFIG_FILE="${2:-}"
+    shift 2
+    ;;
   --refresh)
     ACTION="refresh"
     shift
@@ -263,22 +122,23 @@ while [[ $# -gt 0 ]]; do
 🧠 brew_brain v$VERSION – Manage your Raymon Homebrew CLI arsenal
 
 USAGE:
-  ./brew_brain.sh [COMMAND] [OPTIONS]
+  ./brew_brain [COMMAND] [OPTIONS]
 
 COMMANDS:
-  --refresh              🔄 Fetch latest versions of installed Raymon CLIs
-  checkup                🩺 Compare installed CLIs against config (see: --config)
-  --output FORMAT        📤 Output in alternate formats:
-                           - md | markdown : Markdown table
-                           - json          : JSON array
-                           - table         : Simple CLI table
-  --output-file NAME     📝 Write output to NAME.(md|json|txt) depending on --output
-  --version              📌 Print current version
-  --help                 📖 Show this help message
+  --refresh               🔄  Fetch latest versions of installed Raymon CLIs
+  checkup                 🩺  Compare installed CLIs against config (see: --config)
+  --output FORMAT         📤  Output in alternate formats:
+                             - md | markdown : Markdown table (templated)
+                             - json          : JSON array (pretty + sorted)
+                             - table         : Simple CLI table
+  --output-file NAME      📝  Write output to NAME.(md|json|txt) depending on --output
+  --dump | --fog | fog    🧠  Generate (dump) the Homebrew arsenal .json using brain_dump
+  --version               📌  Print current version
+  --help                  📖  Show this help message
 
 OPTIONS:
-  --silent               🤫 Suppress all interactive or verbose output
-  --config PATH          🔧 Use custom config file (default: .brew_brain.json)
+  --silent                🤫  Suppress all interactive or verbose output
+  --config PATH           🔧  Use custom config file (default: .brew_brain.json)
 
 EXAMPLE CONFIG (~/.config/brew_brain/.brew_brain.json):
 {
@@ -291,12 +151,17 @@ EXAMPLE CONFIG (~/.config/brew_brain/.brew_brain.json):
 }
 
 EXAMPLES:
-  ./brew_brain.sh --refresh
-  ./brew_brain.sh checkup
-  ./brew_brain.sh --output markdown
-  ./brew_brain.sh --config ./my_config.json
-  ./brew_brain.sh --output json --output-file mybrews
+  ./brew_brain --refresh
+  ./brew_brain checkup
+  ./brew_brain --output markdown
+  ./brew_brain --output json --output-file mybrews
+  ./brew_brain --config ./my_config.json
+  ./brew_brain --dump --filter=raymonepping --output=arsenal.json
+  ./brew_brain fog --filter=raymonepping --output=my_brews.json
+
+✨ Output formats are always pretty/sorted for JSON, and Markdown output uses your templates for headers, summaries, and tables.
 EOF
+
     exit 0
     ;;
   *)
@@ -304,6 +169,21 @@ EOF
     ;;
   esac
 done
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  echo "❌ Configuration file $CONFIG_FILE not found."
+  exit 1
+fi
+
+# Load CLI data (supports .track=true)
+if jq -e '.tools[] | select(.track == "true")' "$CONFIG_FILE" >/dev/null; then
+  mapfile -t CLI_NAMES < <(jq -r '.tools[] | select(.track == "true") | .name' "$CONFIG_FILE")
+else
+  mapfile -t CLI_NAMES < <(jq -r '.tools[].name' "$CONFIG_FILE")
+fi
+
+# shellcheck disable=SC2034
+EXPECTED=("${CLI_NAMES[@]}")
 
 get_installed_brews
 
@@ -330,9 +210,11 @@ render)
   json)
     if [[ -n "$OUTPUT_FILE" ]]; then
       render_json >"${OUTPUT_FILE}.json"
-      echo "📄 JSON written to: ${OUTPUT_FILE}.json"
+      # Post-process: pretty-print and sort by .name
+      jq 'sort_by(.name)' "${OUTPUT_FILE}.json" >"${OUTPUT_FILE}.tmp" && mv "${OUTPUT_FILE}.tmp" "${OUTPUT_FILE}.json"
+      echo "📄 JSON written (sorted & pretty) to: ${OUTPUT_FILE}.json"
     else
-      render_json
+      render_json | jq 'sort_by(.name)'
     fi
     ;;
   table)
