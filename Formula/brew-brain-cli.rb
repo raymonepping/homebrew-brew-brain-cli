@@ -12,7 +12,7 @@ class BrewBrainCli < Formula
 
   def install
     bin.install "bin/brew_brain" => "brew_brain"
-    pkgshare.install "lib", "tpl"
+#   pkgshare.install "lib", "tpl"
   end
 
   def caveats
