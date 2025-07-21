@@ -2,18 +2,15 @@
 set -euo pipefail
 
 # shellcheck disable=SC2034
-VERSION="1.1.0"
+VERSION="1.1.1"
 RAYMON_TAP="raymonepping"
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# For Homebrew-installed CLI, always start with Homebrew prefix!
 HOMEBREW_PREFIX="$(brew --prefix 2>/dev/null || true)"
 
-# --- Locate LIB_DIR (Homebrew + Dev paths) ---
 POSSIBLE_LIB_DIRS=(
   "$HOMEBREW_PREFIX/share/brew-brain-cli/lib"
   "$HOMEBREW_PREFIX/opt/brew-brain-cli/share/brew-brain-cli/lib"
-  "$SCRIPT_DIR/../lib"
-  "$SCRIPT_DIR/lib"
   "./lib"
 )
 LIB_DIR=""
@@ -28,12 +25,9 @@ if [[ -z "$LIB_DIR" ]]; then
   exit 1
 fi
 
-# --- Locate TPL_DIR (Homebrew + Dev paths) ---
 POSSIBLE_TPL_DIRS=(
   "$HOMEBREW_PREFIX/share/brew-brain-cli/tpl"
   "$HOMEBREW_PREFIX/opt/brew-brain-cli/share/brew-brain-cli/tpl"
-  "$SCRIPT_DIR/../tpl"
-  "$SCRIPT_DIR/tpl"
   "./tpl"
 )
 TPL_DIR=""
@@ -48,10 +42,8 @@ if [[ -z "$TPL_DIR" ]]; then
   exit 1
 fi
 
-# --- Source Functions ---
 FUNCTIONS_PATH="$LIB_DIR/brew_brain_functions.sh"
 if [[ -f "$FUNCTIONS_PATH" ]]; then
-  # shellcheck source=/dev/null
   source "$FUNCTIONS_PATH"
 else
   echo "❌ Could not locate brew_brain_functions.sh at: $FUNCTIONS_PATH"
