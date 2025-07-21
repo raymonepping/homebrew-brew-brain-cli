@@ -2,13 +2,13 @@
 set -euo pipefail
 
 # shellcheck disable=SC2034
-VERSION="1.0.8"
+VERSION="1.0.9"
 RAYMON_TAP="raymonepping"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOMEBREW_PREFIX="$(brew --prefix 2>/dev/null || true)"
 
-# --- Find LIB_DIR ---
+# --- Locate LIB_DIR (Homebrew + Dev paths) ---
 POSSIBLE_LIB_DIRS=(
   "$HOMEBREW_PREFIX/share/brew-brain-cli/lib"
   "$HOMEBREW_PREFIX/opt/brew-brain-cli/share/brew-brain-cli/lib"
@@ -28,7 +28,7 @@ if [[ -z "$LIB_DIR" ]]; then
   exit 1
 fi
 
-# --- Find TPL_DIR ---
+# --- Locate TPL_DIR (Homebrew + Dev paths) ---
 POSSIBLE_TPL_DIRS=(
   "$HOMEBREW_PREFIX/share/brew-brain-cli/tpl"
   "$HOMEBREW_PREFIX/opt/brew-brain-cli/share/brew-brain-cli/tpl"
@@ -48,51 +48,23 @@ if [[ -z "$TPL_DIR" ]]; then
   exit 1
 fi
 
-# --- Source functions ---
-FOUND_FUNCTIONS=0
-SEARCH_LIB_PATHS=(
-  "$LIB_DIR/brew_brain_functions.sh"
-  "$SCRIPT_DIR/../lib/brew_brain_functions.sh"
-  "$SCRIPT_DIR/lib/brew_brain_functions.sh"
-)
-for path in "${SEARCH_LIB_PATHS[@]}"; do
-  if [[ -f "$path" ]]; then
-    # shellcheck source=/dev/null
-    source "$path"
-    FOUND_FUNCTIONS=1
-    break
-  fi
-done
-if [[ $FOUND_FUNCTIONS -eq 0 ]]; then
-  echo "❌ Could not locate brew_brain_functions.sh in: ${SEARCH_LIB_PATHS[*]}"
+# --- Source Functions ---
+FUNCTIONS_PATH="$LIB_DIR/brew_brain_functions.sh"
+if [[ -f "$FUNCTIONS_PATH" ]]; then
+  # shellcheck source=/dev/null
+  source "$FUNCTIONS_PATH"
+else
+  echo "❌ Could not locate brew_brain_functions.sh at: $FUNCTIONS_PATH"
   exit 1
 fi
 
-# Search for tpl/ in all common locations
-possible_tpl_dirs=(
-  "$BASE_DIR/tpl"
-  "$SCRIPT_DIR/../tpl"
-  "$SCRIPT_DIR/tpl"
-  "/opt/homebrew/share/brew-brain-cli/tpl"
-  "/opt/homebrew/opt/brew-brain-cli/share/brew-brain-cli/tpl"
-)
-for tdir in "${possible_tpl_dirs[@]}"; do
-  if [[ -d "$tdir" ]]; then
-    TPL_DIR="$tdir"
-    break
-  fi
-done
-if [[ -z "${TPL_DIR:-}" || ! -d "$TPL_DIR" ]]; then
-  echo "❌ Could not locate tpl/ directory in: ${possible_tpl_dirs[*]}"
-  exit 1
-fi
-
+# --- Check jq availability ---
 if ! command -v jq &>/dev/null; then
   echo "❌ This script requires 'jq'. Install it with: brew install jq"
   exit 1
 fi
 
-# --- CLI argument parsing etc ---
+# --- CLI defaults ---
 CONFIG_FILE="${HOME}/.brew_brain.json"
 ACTION="human"
 OUTPUT=""
