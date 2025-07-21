@@ -1,6 +1,6 @@
 [![brew_brain](https://img.shields.io/badge/Homebrew-CLI-blue?style=flat-square)](https://github.com/raymonepping/brew-brain-cli)
 [![Arsenal](https://img.shields.io/badge/Arsenal-49_tools-success?style=flat-square)](#)
-[![Exported](https://img.shields.io/badge/Exported-2025-07-21_15:47:39-informational?style=flat-square)](#)
+[![Exported](https://img.shields.io/badge/Exported-2025_07_21-informational?style=flat-square)](#)
 
 ---
 
