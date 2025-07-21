@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # shellcheck disable=SC2034
-VERSION="1.1.1"
+VERSION="1.1.2"
 RAYMON_TAP="raymonepping"
 
 # For Homebrew-installed CLI, always start with Homebrew prefix!

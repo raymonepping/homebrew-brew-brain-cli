@@ -77,7 +77,6 @@ render_human() {
   done
   echo "────────────────────────────────────────────────────────────"
   echo "✨ Installed via: brew tap $RAYMON_TAP/*"
-  echo "📦 Run: bump_version myscript.sh --patch --message \"Fix bug\""
 }
 
 render_markdown() {
