@@ -100,10 +100,12 @@ render_markdown() {
   done
 
   local DATE="$(date '+%Y-%m-%d %H:%M:%S')"
+  local BADGE_DATE="$(date '+%Y-%m-%d_%H:%M:%S')"
   local NUM_TOOLS="${#BREWS[@]}"
 
   # Status badges block
-  awk -v DATE="$DATE" -v NUM_TOOLS="$NUM_TOOLS" '{gsub(/\{\{DATE\}\}/, DATE); gsub(/\{\{NUM_TOOLS\}\}/, NUM_TOOLS); print}' "$status_tpl"
+  awk -v DATE="$BADGE_DATE" -v NUM_TOOLS="$NUM_TOOLS" \
+  '{gsub(/\{\{DATE\}\}/, DATE); gsub(/\{\{NUM_TOOLS\}\}/, NUM_TOOLS); print}' "$status_tpl"
 
   # Header block
   awk -v DATE="$DATE" '{gsub(/\{\{DATE\}\}/, DATE); print}' "$header_tpl"
