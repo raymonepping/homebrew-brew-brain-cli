@@ -12,7 +12,7 @@ class BrewBrainCli < Formula
 
   def install
     bin.install "bin/brew_brain" => "brew_brain"
-    share.install Dir["lib"], Dir["tpl"]
+    pkgshare.install %w[lib tpl]
   end
 
   def caveats
