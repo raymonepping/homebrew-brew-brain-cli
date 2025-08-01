@@ -35,16 +35,20 @@ jq -s '
   [.[1].tools[] | select(.name as $n | $prevnames | index($n) | not)]
 ' "$PREVIOUS" "$INPUT" > "$OUTPUT"
 
-# Count how many are from raymonepping
-count=$(jq '[.[] | select(.source | test("raymonepping"))] | length' "$OUTPUT")
+# Count how many are new raymonepping tools
+new_count=$(jq '[.[] | select(.source | test("raymonepping"))] | length' "$OUTPUT")
+
+# Count total raymonepping tools in arsenal (INPUT)
+total_count=$(jq '[.tools[] | select(.source | test("raymonepping"))] | length' "$INPUT")
 
 echo "🧊 Freeze file written to: $OUTPUT"
 echo "🔄 Compared: $INPUT vs $PREVIOUS"
 
-if [[ "$count" -gt 0 ]]; then
-  echo "📦 Found $count new tool(s) from Raymon Epping in Frozen state."
+if [[ "$new_count" -gt 0 ]]; then
+  echo "📦 Found $new_count new tool(s) from Raymon Epping in Frozen state."
 else
   echo "📭 No new tools from Raymon Epping found."
 fi
 
+echo "🧮 Total tools by Raymon Epping in arsenal: $total_count"
 echo "✅ Finished comparison"
