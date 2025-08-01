@@ -1,0 +1,202 @@
+[
+  {
+    "name": "bandit",
+    "description": "Security-oriented static analyser for Python code",
+    "repo": "homebrew-bandit",
+    "install": "brew install bandit",
+    "version": "1.8.6",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "boost",
+    "description": "Collection of portable C++ source libraries",
+    "repo": "homebrew-boost",
+    "install": "brew install boost",
+    "version": "1.88.0",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "cairo",
+    "description": "Vector graphics library with cross-device output support",
+    "repo": "homebrew-cairo",
+    "install": "brew install cairo",
+    "version": "1.18.4",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "flake8",
+    "description": "Lint your Python code for style and logical errors",
+    "repo": "homebrew-flake8",
+    "install": "brew install flake8",
+    "version": "7.3.0",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "fontconfig",
+    "description": "XML-based font configuration API for X Windows",
+    "repo": "homebrew-fontconfig",
+    "install": "brew install fontconfig",
+    "version": "2.16.0",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "freetype",
+    "description": "Software library to render fonts",
+    "repo": "homebrew-freetype",
+    "install": "brew install freetype",
+    "version": "2.13.3",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "giflib",
+    "description": "Library and utilities for processing GIFs",
+    "repo": "homebrew-giflib",
+    "install": "brew install giflib",
+    "version": "5.2.2",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "graphite2",
+    "description": "Smart font renderer for non-Roman scripts",
+    "repo": "homebrew-graphite2",
+    "install": "brew install graphite2",
+    "version": "1.3.14",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "harfbuzz",
+    "description": "OpenType text shaping engine",
+    "repo": "homebrew-harfbuzz",
+    "install": "brew install harfbuzz",
+    "version": "11.3.3",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "jenkins",
+    "description": "Extendable open source continuous integration server",
+    "repo": "homebrew-jenkins",
+    "install": "brew install jenkins",
+    "version": "2.521",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "libnghttp3",
+    "description": "HTTP/3 library written in C",
+    "repo": "homebrew-libnghttp3",
+    "install": "brew install libnghttp3",
+    "version": "1.11.0",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "libngtcp2",
+    "description": "IETF QUIC protocol implementation",
+    "repo": "homebrew-libngtcp2",
+    "install": "brew install libngtcp2",
+    "version": "1.14.0",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "libtiff",
+    "description": "TIFF library and utilities",
+    "repo": "homebrew-libtiff",
+    "install": "brew install libtiff",
+    "version": "4.7.0",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "libx11",
+    "description": "X.Org: Core X11 protocol client library",
+    "repo": "homebrew-libx11",
+    "install": "brew install libx11",
+    "version": "1.8.12",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "libxext",
+    "description": "X.Org: Library for common extensions to the X11 protocol",
+    "repo": "homebrew-libxext",
+    "install": "brew install libxext",
+    "version": "1.3.6",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "libxrender",
+    "description": "X.Org: Library for the Render Extension to the X11 protocol",
+    "repo": "homebrew-libxrender",
+    "install": "brew install libxrender",
+    "version": "0.9.12",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "little-cms2",
+    "description": "Color management engine supporting ICC profiles",
+    "repo": "homebrew-little-cms2",
+    "install": "brew install little-cms2",
+    "version": "2.17",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "mstch",
+    "description": "Complete implementation of {{mustache}} templates using modern C++",
+    "repo": "homebrew-mstch",
+    "install": "brew install mstch",
+    "version": "1.0.2",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "openjdk@21",
+    "description": "Development kit for the Java programming language",
+    "repo": "homebrew-openjdk@21",
+    "install": "brew install openjdk@21",
+    "version": "21.0.8",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "pipx",
+    "description": "Execute binaries from Python packages in isolated environments",
+    "repo": "homebrew-pipx",
+    "install": "brew install pipx",
+    "version": "1.7.1",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "simdjson",
+    "description": "SIMD-accelerated C++ JSON parser",
+    "repo": "homebrew-simdjson",
+    "install": "brew install simdjson",
+    "version": "3.13.0",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "terrascan",
+    "description": "Detect compliance and security violations across Infrastructure as Code",
+    "repo": "homebrew-terrascan",
+    "install": "brew install terrascan",
+    "version": "1.19.9",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "tflint",
+    "description": "Linter for Terraform files",
+    "repo": "homebrew-tflint",
+    "install": "brew install tflint",
+    "version": "0.58.1",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "tfsec",
+    "description": "Static analysis security scanner for your terraform code",
+    "repo": "homebrew-tfsec",
+    "install": "brew install tfsec",
+    "version": "1.28.14",
+    "source": "homebrew/core"
+  },
+  {
+    "name": "typescript",
+    "description": "Language for application scale JavaScript development",
+    "repo": "homebrew-typescript",
+    "install": "brew install typescript",
+    "version": "5.9.2",
+    "source": "homebrew/core"
+  }
+]
