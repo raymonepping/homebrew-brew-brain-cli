@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # shellcheck disable=SC2034
-VERSION="1.5.0"
+VERSION="1.5.1"
 RAYMON_TAP="raymonepping"
 
 # For Homebrew-installed CLI, always start with Homebrew prefix!
@@ -64,25 +64,6 @@ OUTPUT_FILE=""
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# --- Freeze CLI parsing ---
-if [[ "$1" == "freeze" || "$1" == "--freeze" ]]; then
-  ACTION="freeze"
-  shift
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      --input) FREEZE_INPUT="$2"; shift 2;;
-      --previous) FREEZE_PREV="$2"; shift 2;;
-      --output) FREEZE_OUT="$2"; shift 2;;
-      *) echo "❌ Unknown freeze option: $1"; exit 1;;
-    esac
-  done
-
-  if [[ -z "${FREEZE_INPUT:-}" || -z "${FREEZE_PREV:-}" ]]; then
-    echo "❌ Missing --input and/or --previous for freeze action."
-    exit 1
-  fi
-fi
-
 # --- Dump/fog passthrough (before regular CLI parsing) ---
 if [[ $# -ge 1 && ("$1" == "--dump" || "$1" == "--fog" || "$1" == "fog") ]]; then
   DUMP_CMD=""
@@ -134,17 +115,38 @@ while [[ $# -gt 0 ]]; do
     ACTION="checkup"
     shift
     ;;
-  freeze)
+  freeze | --freeze)
+    shift
     FREEZE_SCRIPT="$LIB_DIR/brew_brain_freeze.sh"
     if [[ ! -f "$FREEZE_SCRIPT" ]]; then
       echo "❌ Could not find brew_brain_freeze.sh in $LIB_DIR"
       exit 1
     fi
+
+    # Default output if not set
+    FREEZE_OUT="freeze.json"
+
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --input) FREEZE_INPUT="$2"; shift 2 ;;
+        --previous) FREEZE_PREV="$2"; shift 2 ;;
+        --output) FREEZE_OUT="$2"; shift 2 ;;
+        *) echo "❌ Unknown freeze option: $1"; exit 1 ;;
+      esac
+    done
+
+    if [[ -z "${FREEZE_INPUT:-}" || -z "${FREEZE_PREV:-}" ]]; then
+      echo "❌ Missing --input and/or --previous for freeze action."
+      exit 1
+    fi
+
     "$FREEZE_SCRIPT" \
       --input "$FREEZE_INPUT" \
       --previous "$FREEZE_PREV" \
-      --output "${FREEZE_OUT:-freeze.json}"
+      --output "$FREEZE_OUT"
+    exit 0
     ;;
+  
   --version)
     echo "raymon-brews v$VERSION"
     exit 0
